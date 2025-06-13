@@ -9,7 +9,7 @@ exports.processUpload = async (file) => {
 
     const storageUrl = await uploadToB2(file.path, filename);
 
-    //fs.unlinkSync(file.path); delete local file 
+    fs.unlinkSync(file.path); //delete local file 
 
     await Upload.create({
         id: videoId,
