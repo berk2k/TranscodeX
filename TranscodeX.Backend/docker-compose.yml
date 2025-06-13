@@ -1,13 +1,18 @@
+version: '3.8'
+
 services:
   upload-service:
     build: ./upload-service
     depends_on:
       - upload-postgres
+      - rabbitmq
     environment:
       DB_NAME: ${UPLOAD_DB_NAME}
       DB_USER: ${UPLOAD_DB_USER}
       DB_PASS: ${UPLOAD_DB_PASS}
       DB_HOST: ${UPLOAD_DB_HOST}
+      RABBITMQ_URL: ${UPLOAD_RABBITMQ_URL}
+      RABBITMQ_QUEUE: ${UPLOAD_RABBITMQ_QUEUE}
     ports:
       - "${UPLOAD_SERVICE_PORT}:3000"
     volumes:
@@ -24,6 +29,15 @@ services:
       - "5432:5432"
     volumes:
       - upload_pg_data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"     # AMQP  port
+      - "15672:15672"   # Web UI port
+    environment:
+      RABBITMQ_DEFAULT_USER: ${UPLOAD_RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${UPLOAD_RABBITMQ_DEFAULT_PASS}
 
 volumes:
   upload_pg_data:

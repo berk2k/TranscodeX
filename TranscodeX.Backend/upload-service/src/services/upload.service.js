@@ -1,4 +1,5 @@
 const { uploadToB2 } = require('../utils/b2Client');
+const { sendToQueue } = require('../queue/rabbitmqProducer');
 const path = require('path');
 const fs = require('fs');
 
@@ -20,7 +21,7 @@ exports.processUpload = async (file) => {
     });
 
     const jobPayload = { videoId, storageUrl };
-    await sendToQueue('video-processing', jobPayload); // rabbitMQ
+    await sendToQueue(process.env.RABBITMQ_QUEUE, jobPayload); // rabbitMQ
 
     return jobPayload;
 };
