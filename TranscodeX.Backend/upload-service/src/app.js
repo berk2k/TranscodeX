@@ -1,11 +1,15 @@
-const sequelize = require('./config/db');
+const express = require('express');
+const uploadRoutes = require('./routes/upload.route');
+const fs = require('fs');
 
 
-sequelize.authenticate()
-  .then(() => {
-    console.log('PostgreSQL connection established.');
-    return sequelize.sync(); // creates table when app started with upload.model
-  })
-  .catch(err => {
-    console.error('DB connection error:', err);
-  });
+if (!fs.existsSync('./temp')) {
+  fs.mkdirSync('./temp');
+}
+
+const app = express();
+
+app.use(express.json());
+app.use('/api', uploadRoutes);
+
+module.exports = app;
