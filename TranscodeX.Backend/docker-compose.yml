@@ -1,0 +1,29 @@
+services:
+  upload-service:
+    build: ./upload-service
+    depends_on:
+      - upload-postgres
+    environment:
+      DB_NAME: ${UPLOAD_DB_NAME}
+      DB_USER: ${UPLOAD_DB_USER}
+      DB_PASS: ${UPLOAD_DB_PASS}
+      DB_HOST: ${UPLOAD_DB_HOST}
+    ports:
+      - "${UPLOAD_SERVICE_PORT}:3000"
+    volumes:
+      - ./upload-service:/app
+
+  upload-postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: ${UPLOAD_DB_NAME}
+      POSTGRES_USER: ${UPLOAD_DB_USER}
+      POSTGRES_PASSWORD: ${UPLOAD_DB_PASS}
+    ports:
+      - "5432:5432"
+    volumes:
+      - upload_pg_data:/var/lib/postgresql/data
+
+volumes:
+  upload_pg_data:
