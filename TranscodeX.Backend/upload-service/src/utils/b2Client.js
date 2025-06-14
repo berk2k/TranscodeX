@@ -26,14 +26,14 @@ const s3 = new S3Client({
 try {
   s3.middlewareStack.remove("FlexibleChecksumsMiddleware");
 } catch (error) {
-  console.log('FlexibleChecksumsMiddleware zaten mevcut değil veya kaldırılamadı');
+  console.log('FlexibleChecksumsMiddleware not exists or can not remove');
 }
 
 
 try {
   s3.middlewareStack.remove("Md5BodyChecksumMiddleware");
 } catch (error) {
-  console.log('Md5BodyChecksumMiddleware bulunamadı');
+  console.log('can not find Md5BodyChecksumMiddleware');
 }
 
 const uploadToB2 = async (filePath, fileName) => {
