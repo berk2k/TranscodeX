@@ -6,6 +6,7 @@ services:
     depends_on:
       - upload-postgres
       - rabbitmq
+    restart: on-failure  
     env_file:
     - ./.env
     environment:
@@ -22,8 +23,8 @@ services:
       B2_REGION: ${B2_REGION}
     ports:
       - "${UPLOAD_SERVICE_PORT}:3000"
-    volumes:
-      - ./upload-service:/app
+    #volumes:
+    #  - ./upload-service:/app
 
   upload-postgres:
     image: postgres:latest

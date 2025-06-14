@@ -5,7 +5,7 @@ const app = require('./app');
 const sequelize = require('./config/db');
 require('./models/upload.model');
 
-const PORT = process.env.UPLOAD_SERVICE_PORT || 3000;
+const PORT = 3000;
 
 const startServer = async () => {
   try {
