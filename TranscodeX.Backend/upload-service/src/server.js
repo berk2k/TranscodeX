@@ -1,9 +1,11 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
+
 const app = require('./app');
 const sequelize = require('./config/db');
 require('./models/upload.model');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.UPLOAD_SERVICE_PORT || 3000;
 
 const startServer = async () => {
   try {

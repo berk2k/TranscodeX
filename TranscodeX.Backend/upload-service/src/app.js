@@ -1,10 +1,13 @@
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
+
 const express = require('express');
 const uploadRoutes = require('./routes/upload.route');
 const fs = require('fs');
 
-
-if (!fs.existsSync('./temp')) {
-  fs.mkdirSync('./temp');
+const tempDir = path.resolve(__dirname, '../temp');
+if (!fs.existsSync(tempDir)) {
+  fs.mkdirSync(tempDir);
 }
 
 const app = express();

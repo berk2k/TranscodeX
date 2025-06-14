@@ -26,7 +26,7 @@ services:
       - ./upload-service:/app
 
   upload-postgres:
-    image: postgres:15
+    image: postgres:latest
     restart: always
     environment:
       POSTGRES_DB: ${UPLOAD_DB_NAME}
