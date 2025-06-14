@@ -1,4 +1,6 @@
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { S3Client, PutObjectCommand, GetObjectCommand  } = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+
 const fs = require('fs');
 const mime = require('mime-types');
 require('dotenv').config();
@@ -26,8 +28,18 @@ const uploadToB2 = async (filePath, fileName) => {
 
       await s3.send(command);
 
-    return `${process.env.B2_ENDPOINT}/${process.env.B2_BUCKET_NAME}/${fileName}`;
+    return fileName;
 
 };
 
-module.exports = { uploadToB2 };
+const generateSignedUrl = async (fileName) => {
+    const command = new GetObjectCommand({
+        Bucket: process.env.B2_BUCKET_NAME,
+        Key: fileName,
+    });
+
+    const url = await getSignedUrl(s3, command, { expiresIn: 600 }); // 10 mins
+    return url;
+};
+
+module.exports = { uploadToB2, generateSignedUrl };

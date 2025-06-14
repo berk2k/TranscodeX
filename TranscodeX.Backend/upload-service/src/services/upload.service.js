@@ -7,7 +7,7 @@ exports.processUpload = async (file) => {
     const videoId = uuidv4()
     const filename = `${videoId}${path.extname(file.originalname)}`;
 
-    const storageUrl = await uploadToB2(file.path, filename);
+    const storageKey = await uploadToB2(file.path, filename);
 
     fs.unlinkSync(file.path); //delete local file 
 
@@ -15,7 +15,7 @@ exports.processUpload = async (file) => {
         id: videoId,
         original_name: file.originalname,
         mime_type: file.mimetype,
-        storage_url: storageUrl,
+        storage_key: storageKey,
         status: 'pending',
         uploaded_at: new Date()
     });

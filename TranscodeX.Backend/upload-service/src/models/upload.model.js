@@ -15,9 +15,10 @@ const Upload = sequelize.define('Upload', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  storage_url: {
+  storage_key: {
     type: DataTypes.STRING,
     allowNull: false,
+    unique: true,
   },
   status: {
     type: DataTypes.ENUM('pending', 'processing', 'completed', 'failed'),
