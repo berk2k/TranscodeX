@@ -6,6 +6,8 @@ services:
     depends_on:
       - upload-postgres
       - rabbitmq
+    env_file:
+    - ./.env
     environment:
       DB_NAME: ${UPLOAD_DB_NAME}
       DB_USER: ${UPLOAD_DB_USER}
