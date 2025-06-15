@@ -68,7 +68,7 @@ const generateSignedUrl = async (fileName) => {
       Key: fileName,
     });
 
-    const url = await getSignedUrl(s3, command, { expiresIn: 600 }); // 10 dk
+    const url = await getSignedUrl(s3, command, { expiresIn: 600 }); // 10 min
     return url;
   } catch (error) {
     console.error('Signed URL error:', error);
