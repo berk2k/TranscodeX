@@ -1,4 +1,4 @@
-const { handleJob } = require('../jobProcessor');
+const { handleJob } = require('../services/jobProcessor');
 
 exports.processJob = async (req, res) => {
   try {
