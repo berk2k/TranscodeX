@@ -3,7 +3,7 @@ const fs = require('fs');
 const { generateSignedUrl, uploadToB2 } = require('../utils/b2Client');
 const { downloadFile } = require('../utils/download');
 const { transcodeVideo } = require('../utils/ffmpeg');
-const { updateStatus } = require('../utils/dbHelper');
+const { updateUploadStatus } = require('../utils/uploadServiceClient');
 
 const tempDir = path.resolve(__dirname, '../../temp');
 if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir);
@@ -24,7 +24,7 @@ exports.handleJob = async ({ videoId, storageKey }) => {
 
     await uploadToB2(processedFilePath, processedStorageKey);
 
-    await updateStatus(videoId, 'completed');
+    await updateUploadStatus(videoId, 'completed');
 
     console.log(`[${videoId}] completed`);
   } catch (error) {
