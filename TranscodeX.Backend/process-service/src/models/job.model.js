@@ -4,13 +4,7 @@ const sequelize = require('../config/db');
 const Job = sequelize.define('Job', {
   id: {
     type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
-  },
-  video_id: {
-    type: DataTypes.UUID,
-    allowNull: false,
-    unique: true,
   },
   storage_key: {
     type: DataTypes.STRING,
@@ -21,21 +15,18 @@ const Job = sequelize.define('Job', {
     allowNull: false,
     defaultValue: 'pending',
   },
-  error_message: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
   created_at: {
     type: DataTypes.DATE,
+    allowNull: false,
     defaultValue: DataTypes.NOW,
   },
   updated_at: {
     type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
+    allowNull: true,
   }
 }, {
   tableName: 'jobs',
-  timestamps: false
+  timestamps: false,
 });
 
 module.exports = Job;
