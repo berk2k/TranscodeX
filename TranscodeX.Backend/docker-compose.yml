@@ -37,7 +37,17 @@ services:
       - "5432:5432"
     volumes:
       - upload_pg_data:/var/lib/postgresql/data
-
+  process-postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: ${PROCESS_DB_NAME}
+      POSTGRES_USER: ${PROCESS_DB_USER}
+      POSTGRES_PASSWORD: ${PROCESS_DB_PASS}
+    ports:
+      - "5433:5433"  
+    volumes:
+      - process_pg_data:/var/lib/postgresql/data
   rabbitmq:
     image: rabbitmq:3-management
     ports:
@@ -49,3 +59,4 @@ services:
 
 volumes:
   upload_pg_data:
+  process_pg_data:
