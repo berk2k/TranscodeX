@@ -25,7 +25,28 @@ services:
       - "${UPLOAD_SERVICE_PORT}:3000"
     #volumes:
     #  - ./upload-service:/app
-
+  process-service:
+    build: ./process-service
+    depends_on:
+      - process-postgres
+      - rabbitmq
+    restart: on-failure
+    env_file:
+    - ./.env
+    environment:
+      DB_NAME: ${PROCESS_DB_NAME}
+      DB_USER: ${PROCESS_DB_USER}
+      DB_PASS: ${PROCESS_DB_PASS}
+      DB_HOST: ${PROCESS_DB_HOST}
+      RABBITMQ_URL: ${UPLOAD_RABBITMQ_URL}
+      RABBITMQ_QUEUE: ${UPLOAD_RABBITMQ_QUEUE}
+      B2_KEY_ID: ${B2_KEY_ID}
+      B2_APPLICATION_KEY: ${B2_APPLICATION_KEY}
+      B2_BUCKET_NAME: ${B2_BUCKET_NAME}
+      B2_ENDPOINT: ${B2_ENDPOINT}
+      B2_REGION: ${B2_REGION}
+    ports:
+      - "${PROCESS_SERVICE_PORT}:3002"
   upload-postgres:
     image: postgres:latest
     restart: always

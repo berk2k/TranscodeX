@@ -18,7 +18,7 @@ const startServer = async () => {
     console.log('Database synchronized.');
 
     app.listen(PORT, () => {
-      console.log(`Process service running on port ${PORT}`);
+      console.log(`Server is running on port ${PORT}.`);
     });
   } catch (error) {
     console.error('Startup error:', error);
