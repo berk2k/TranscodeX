@@ -3,7 +3,7 @@ const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
 
 const { handleJob } = require('../services/jobProcessor');
-const { createJob } = require('../services/job.service')
+
 
 const RABBITMQ_URL = process.env.UPLOAD_RABBITMQ_URL;
 const QUEUE_NAME = process.env.UPLOAD_RABBITMQ_QUEUE;
@@ -25,7 +25,7 @@ const startConsumer = async () => {
             console.log('Received job:', job);
 
             await handleJob(job);
-            await createJob(job);
+            
 
             channel.ack(msg); 
           } catch (err) {

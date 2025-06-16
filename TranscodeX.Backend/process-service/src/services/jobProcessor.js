@@ -4,6 +4,7 @@ const { generateSignedUrl, uploadToB2 } = require('../utils/b2Client');
 const { downloadFile } = require('../utils/download');
 const { transcodeVideo } = require('../utils/ffmpeg');
 const { updateUploadStatus } = require('../utils/uploadServiceClient');
+const { createJob } = require('../services/job.service')
 
 const tempDir = path.resolve(__dirname, '../../temp');
 if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir);
@@ -17,6 +18,7 @@ exports.handleJob = async ({ videoId, storageKey }) => {
     console.log(`[${videoId}] Process started`);
 
     const signedUrl = await generateSignedUrl(storageKey);
+    await createJob(videoId,storageKey);
 
     await downloadFile(signedUrl, originalFilePath);
 
