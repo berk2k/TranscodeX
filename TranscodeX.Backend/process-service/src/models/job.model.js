@@ -6,6 +6,10 @@ const Job = sequelize.define('Job', {
     type: DataTypes.UUID,
     primaryKey: true,
   },
+  video_id: {
+    type: DataTypes.UUID,
+    allowNull: false,
+  },
   storage_key: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -19,6 +23,18 @@ const Job = sequelize.define('Job', {
     type: DataTypes.DATE,
     allowNull: false,
     defaultValue: DataTypes.NOW,
+  },
+  started_at: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  finished_at: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  error_message: {
+    type: DataTypes.TEXT,
+    allowNull: true,
   },
   updated_at: {
     type: DataTypes.DATE,
