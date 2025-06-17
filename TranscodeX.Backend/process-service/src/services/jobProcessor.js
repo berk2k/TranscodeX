@@ -4,7 +4,7 @@ const fs = require('fs');
 //const { downloadFile } = require('../utils/download');
 //const { transcodeVideo } = require('../utils/ffmpeg');
 //const { updateUploadStatus } = require('../utils/uploadServiceClient');
-const { createJob } = require('../services/job.service')
+const { createJob, updateJobStatus } = require('../services/job.service')
 
 const tempDir = path.resolve(__dirname, '../../temp');
 if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir);
@@ -18,20 +18,27 @@ exports.handleJob = async ({ videoId, storageKey }) => {
     console.log(`[${videoId}] Process started`);
 
     const signedUrl = await generateSignedUrl(storageKey);
-    await createJob(videoId,storageKey);
+    job = await createJob(videoId,storageKey);
 
-    //await downloadFile(signedUrl, originalFilePath);
+    await downloadFile(signedUrl, originalFilePath);
 
-    //await transcodeVideo(originalFilePath, processedFilePath);
+    await transcodeVideo(originalFilePath, processedFilePath);
 
     //await uploadToB2(processedFilePath, processedStorageKey);
+
+    //await updateJobStatus(job.id, 'completed');
 
     //await updateUploadStatus(videoId, 'completed');
 
     console.log(`[${videoId}] completed`);
   } catch (error) {
     console.error(`[${videoId}] error:`, error);
-    await updateStatus(videoId, 'failed');
+    if (job?.id) {
+      await updateJobStatus(job.id, 'failed', {
+        error_message: error.message
+      });
+    }
+    //await updateStatus(videoId, 'failed');
   } finally {
     [originalFilePath, processedFilePath].forEach(file => {
       if (fs.existsSync(file)) fs.unlinkSync(file);
