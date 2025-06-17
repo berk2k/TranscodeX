@@ -17,3 +17,32 @@ exports.createJob = async ({ videoId, storageKey }) => {
 
   return job;
 };
+
+async function updateJobStatus(jobId, status, options = {}) {
+  const updateData = {
+    status,
+    updated_at: new Date()
+  };
+
+  if (status === 'processing') {
+    updateData.started_at = new Date();
+  }
+
+  if (status === 'completed' || status === 'failed') {
+    updateData.finished_at = new Date();
+  }
+
+  if (options.error_message) {
+    updateData.error_message = options.error_message;
+  }
+
+  await Job.update(updateData, {
+    where: { id: jobId }
+  });
+
+  return updateData;
+}
+
+module.exports = {
+  updateJobStatus
+};
