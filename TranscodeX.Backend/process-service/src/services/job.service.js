@@ -44,5 +44,5 @@ async function updateJobStatus(jobId, status, options = {}) {
 }
 
 module.exports = {
-  updateJobStatus
+  updateJobStatus,
 };

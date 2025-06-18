@@ -1,9 +1,9 @@
 const path = require('path');
 const fs = require('fs');
-// const { generateSignedUrl, uploadToB2 } = require('../utils/b2Client');
-// const { downloadFile } = require('../utils/download');
-// const { transcodeVideo } = require('../utils/ffmpeg');
-// const { updateUploadStatus } = require('../utils/uploadServiceClient');
+const { generateSignedUrl, uploadToB2 } = require('../utils/b2Client');
+const { downloadFile } = require('../utils/download');
+const { transcodeVideo } = require('../utils/ffmpeg');
+const { updateUploadStatus } = require('../utils/uploadServiceClient');
 const { createJob, updateJobStatus } = require('../services/job.service')
 
 const tempDir = path.resolve(__dirname, '../../temp');
@@ -20,15 +20,15 @@ exports.handleJob = async ({ videoId, storageKey }) => {
     const signedUrl = await generateSignedUrl(storageKey);
     job = await createJob(videoId,storageKey);
 
-    // await downloadFile(signedUrl, originalFilePath);
+    await downloadFile(signedUrl, originalFilePath);
 
-    // await transcodeVideo(originalFilePath, processedFilePath);
+    await transcodeVideo(originalFilePath, processedFilePath);
 
-    // await uploadToB2(processedFilePath, processedStorageKey);
+    await uploadToB2(processedFilePath, processedStorageKey);
 
-    // await updateJobStatus(job.id, 'completed');
+    await updateJobStatus(job.id, 'completed');
 
-    // await updateUploadStatus(videoId, 'completed');
+    await updateUploadStatus(videoId, 'completed');
 
     console.log(`[${videoId}] completed`);
   } catch (error) {

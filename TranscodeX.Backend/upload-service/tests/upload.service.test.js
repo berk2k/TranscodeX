@@ -23,7 +23,7 @@ describe('processUpload', () => {
 
   beforeEach(() => {
     uploadToB2.mockResolvedValue('fake-storage-key');
-    Upload.create.mockResolvedValue({ id: 'some-video-id' }); // id döndürmek faydalı olabilir
+    Upload.create.mockResolvedValue({ id: 'some-video-id' });
     sendToQueue.mockResolvedValue();
   });
 
