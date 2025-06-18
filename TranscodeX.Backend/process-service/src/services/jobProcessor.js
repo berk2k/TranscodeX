@@ -14,31 +14,30 @@ exports.handleJob = async ({ videoId, storageKey }) => {
   const processedFilePath = path.join(tempDir, `${videoId}-processed.mp4`);
   const processedStorageKey = `${videoId}-processed.mp4`;
 
+  let job = null;
+
   try {
     console.log(`[${videoId}] Process started`);
 
     const signedUrl = await generateSignedUrl(storageKey);
-    job = await createJob(videoId,storageKey);
+
+    job = await createJob({ videoId, storageKey });
 
     await downloadFile(signedUrl, originalFilePath);
-
     await transcodeVideo(originalFilePath, processedFilePath);
-
     await uploadToB2(processedFilePath, processedStorageKey);
-
     await updateJobStatus(job.id, 'completed');
-
     await updateUploadStatus(videoId, 'completed');
 
     console.log(`[${videoId}] completed`);
   } catch (error) {
     console.error(`[${videoId}] error:`, error);
+
     if (job?.id) {
       await updateJobStatus(job.id, 'failed', {
         error_message: error.message
       });
     }
-    //await updateStatus(videoId, 'failed');
   } finally {
     [originalFilePath, processedFilePath].forEach(file => {
       if (fs.existsSync(file)) fs.unlinkSync(file);
