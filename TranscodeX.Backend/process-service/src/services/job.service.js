@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
 const Job = require('../models/job.model');
 
-exports.createJob = async ({ videoId, storageKey }) => {
+const createJob = async ({ videoId, storageKey }) => {
   const jobId = uuidv4();
   const now = new Date();
 
@@ -45,4 +45,5 @@ async function updateJobStatus(jobId, status, options = {}) {
 
 module.exports = {
   updateJobStatus,
+  createJob
 };
