@@ -1,3 +1,13 @@
+const amqp = require('amqplib');
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
+
+let connection = null;
+let channel = null;
+
+const QUEUE_NAME = process.env.UPLOAD_RABBITMQ_QUEUE;
+const RABBITMQ_URL = process.env.PROCESS_RABBITMQ_URL;
+
 let retryCount = 0;
 const MAX_RETRIES = 5;
 
