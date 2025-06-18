@@ -8,7 +8,7 @@ const sequelize = require('./config/db');
 
 require('./models/job.model');
 
-const PORT = 3002;
+const PORT = process.env.PROCESS_SERVICE_PORT_DOCKER;
 
 const startServer = async () => {
   try {

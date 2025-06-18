@@ -44,13 +44,13 @@ const startConsumer = async () => {
       if (msg !== null) {
         try {
           const job = JSON.parse(msg.content.toString());
-          console.log('📥 Received job:', job);
+          console.log('Received job:', job);
 
           await handleJob(job);
           channel.ack(msg);
         } catch (err) {
           console.error('Job processing failed:', err);
-          channel.nack(msg, false, true); // Retry
+          channel.nack(msg, false, true);
         }
       }
     }, { noAck: false });
