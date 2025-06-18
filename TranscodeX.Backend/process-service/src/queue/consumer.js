@@ -1,5 +1,6 @@
 const amqp = require('amqplib');
 const path = require('path');
+const { handleJob } = require('../services/jobProcessor');
 require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
 
 let connection = null;
