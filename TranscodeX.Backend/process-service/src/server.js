@@ -1,5 +1,6 @@
 const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
+const { startConsumer } = require('./queue/startConsumer');
 
 const app = require('./app');
 const sequelize = require('./config/db');
@@ -20,6 +21,8 @@ const startServer = async () => {
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}.`);
     });
+
+    startConsumer();
   } catch (error) {
     console.error('Startup error:', error);
     process.exit(1);

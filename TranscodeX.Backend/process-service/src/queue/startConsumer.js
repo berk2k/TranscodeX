@@ -7,3 +7,5 @@ startConsumer()
     console.error('Failed to start consumer:', err);
     process.exit(1);
   });
+
+module.exports = { startConsumer };
