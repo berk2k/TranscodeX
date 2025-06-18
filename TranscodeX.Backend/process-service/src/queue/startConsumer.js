@@ -1,5 +1,6 @@
 const { startConsumer } = require('./consumer');
 
+
 startConsumer()
   .then(() => console.log('Consumer started'))
   .catch(err => {

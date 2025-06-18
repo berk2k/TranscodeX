@@ -54,3 +54,5 @@ const startConsumer = async () => {
     }
   }
 };
+
+module.exports = { startConsumer };
