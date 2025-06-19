@@ -5,6 +5,7 @@ const { downloadFile } = require('../utils/download');
 const { transcodeVideo } = require('../utils/ffmpeg');
 const { updateUploadStatus } = require('../utils/uploadServiceClient');
 const { createJob, updateJobStatus } = require('../services/job.service')
+const {sendToQueue} = require('../queue/producer')
 
 const tempDir = path.resolve(__dirname, '../../temp');
 if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir);
@@ -23,11 +24,16 @@ exports.handleJob = async ({ videoId, storageKey }) => {
 
     job = await createJob({ videoId, storageKey });
 
+
     await downloadFile(signedUrl, originalFilePath);
     await transcodeVideo(originalFilePath, processedFilePath);
     await uploadToB2(processedFilePath, processedStorageKey);
     await updateJobStatus(job.id, 'completed');
     await updateUploadStatus(videoId, 'completed');
+
+    const jobPayload = { videoId, processedStorageKey };
+    await sendToQueue(process.env.PROCESSED_RABBITMQ_QUEUE,jobPayload)
+
 
     console.log(`[${videoId}] completed`);
   } catch (error) {
