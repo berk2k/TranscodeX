@@ -48,28 +48,28 @@ services:
     ports:
       - "${PROCESS_SERVICE_PORT}:${PROCESS_SERVICE_PORT_DOCKER}"
 
-    metadata-service:
-      build: ./metadata-service
-      depends_on:
-        - metadata-postgres
-        - rabbitmq
-      restart: on-failure
-      env_file:
-      - ./.env
-      environment:
-        DB_NAME: ${METADATA_DB_NAME}
-        DB_USER: ${METADATA_DB_USER}
-        DB_PASS: ${METADATA_DB_PASS}
-        DB_HOST: ${METADATA_DB_HOST}
-        RABBITMQ_URL: ${UPLOAD_RABBITMQ_URL}
-        RABBITMQ_QUEUE: ${PROCESSED_RABBITMQ_QUEUE}
-        B2_KEY_ID: ${B2_KEY_ID}
-        B2_APPLICATION_KEY: ${B2_APPLICATION_KEY}
-        B2_BUCKET_NAME: ${B2_BUCKET_NAME}
-        B2_ENDPOINT: ${B2_ENDPOINT}
-        B2_REGION: ${B2_REGION}
-      ports:
-        - "${METADATA_SERVICE_PORT}:${METADATA_SERVICE_PORT_DOCKER}"
+  metadata-service:
+    build: ./metadata-service
+    depends_on:
+      - metadata-postgres
+      - rabbitmq
+    restart: on-failure
+    env_file:
+    - ./.env
+    environment:
+      DB_NAME: ${METADATA_DB_NAME}
+      DB_USER: ${METADATA_DB_USER}
+      DB_PASS: ${METADATA_DB_PASS}
+      DB_HOST: ${METADATA_DB_HOST}
+      RABBITMQ_URL: ${UPLOAD_RABBITMQ_URL}
+      RABBITMQ_QUEUE: ${PROCESSED_RABBITMQ_QUEUE}
+      B2_KEY_ID: ${B2_KEY_ID}
+      B2_APPLICATION_KEY: ${B2_APPLICATION_KEY}
+      B2_BUCKET_NAME: ${B2_BUCKET_NAME}
+      B2_ENDPOINT: ${B2_ENDPOINT}
+      B2_REGION: ${B2_REGION}
+    ports:
+      - "${METADATA_SERVICE_PORT}:${METADATA_SERVICE_PORT_DOCKER}"
 
   upload-postgres:
     image: postgres:latest
