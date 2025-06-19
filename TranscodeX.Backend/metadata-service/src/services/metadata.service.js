@@ -1,5 +1,6 @@
 const { VideoMetadata } = require('../models/metadata.model');
 const { downloadFile } = require('../utils/download');
+const { generateSignedUrl } = require('../utils/b2Client');
 const { extractMetadata } = require('../utils/extract');
 const path = require('path');
 const tempDir = require('os').tmpdir();
