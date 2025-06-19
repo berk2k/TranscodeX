@@ -22,7 +22,7 @@ services:
       B2_ENDPOINT: ${B2_ENDPOINT}
       B2_REGION: ${B2_REGION}
     ports:
-      - "${UPLOAD_SERVICE_PORT}:3000"
+      - "${UPLOAD_SERVICE_PORT}:${UPLOAD_SERVICE_PORT_DOCKER}"
     #volumes:
     #  - ./upload-service:/app
   process-service:
@@ -46,7 +46,31 @@ services:
       B2_ENDPOINT: ${B2_ENDPOINT}
       B2_REGION: ${B2_REGION}
     ports:
-      - "${PROCESS_SERVICE_PORT}:3002"
+      - "${PROCESS_SERVICE_PORT}:${PROCESS_SERVICE_PORT_DOCKER}"
+
+    metadata-service:
+      build: ./metadata-service
+      depends_on:
+        - metadata-postgres
+        - rabbitmq
+      restart: on-failure
+      env_file:
+      - ./.env
+      environment:
+        DB_NAME: ${METADATA_DB_NAME}
+        DB_USER: ${METADATA_DB_USER}
+        DB_PASS: ${METADATA_DB_PASS}
+        DB_HOST: ${METADATA_DB_HOST}
+        RABBITMQ_URL: ${UPLOAD_RABBITMQ_URL}
+        RABBITMQ_QUEUE: ${PROCESSED_RABBITMQ_QUEUE}
+        B2_KEY_ID: ${B2_KEY_ID}
+        B2_APPLICATION_KEY: ${B2_APPLICATION_KEY}
+        B2_BUCKET_NAME: ${B2_BUCKET_NAME}
+        B2_ENDPOINT: ${B2_ENDPOINT}
+        B2_REGION: ${B2_REGION}
+      ports:
+        - "${METADATA_SERVICE_PORT}:${METADATA_SERVICE_PORT_DOCKER}"
+
   upload-postgres:
     image: postgres:latest
     restart: always
@@ -69,6 +93,19 @@ services:
       - "5433:5432"  
     volumes:
       - process_pg_data:/var/lib/postgresql/data
+    
+  metadata-postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: ${METADATA_DB_NAME}
+      POSTGRES_USER: ${METADATA_DB_USER}
+      POSTGRES_PASSWORD: ${METADATA_DB_PASS}
+    ports:
+      - "5434:5432"
+    volumes:
+      - metadata_pg_data:/var/lib/postgresql/data
+
   rabbitmq:
     image: rabbitmq:3-management
     ports:
@@ -81,3 +118,4 @@ services:
 volumes:
   upload_pg_data:
   process_pg_data:
+  metadata_pg_data:
