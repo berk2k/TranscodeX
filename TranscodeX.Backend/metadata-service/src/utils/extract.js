@@ -25,4 +25,4 @@ function extractMetadata(videoPath) {
   });
 }
 
-modules.exports = extractMetadata
+modules.exports = { extractMetadata }
