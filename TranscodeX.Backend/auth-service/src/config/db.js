@@ -8,4 +8,8 @@ const sequelize = new Sequelize(process.env.AUTH_DB_NAME, process.env.AUTH_DB_US
   logging: false,
 });
 
-module.exports = sequelize;
+const jwt_config = {
+  jwtSecret: process.env.JWT_SECRET_KEY
+};
+
+module.exports = {sequelize,jwt_config};
