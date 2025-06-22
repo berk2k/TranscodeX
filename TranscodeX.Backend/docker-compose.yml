@@ -1,12 +1,24 @@
 version: '3.8'
 
 services:
+  traefik:
+    image: traefik:v3.0
+    container_name: traefik
+    command:
+      - --configFile=/etc/traefik/traefik.yml
+    ports:
+      - "80:80"       # HTTP
+      - "8080:8080"   # Traefik dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml
+    restart: unless-stopped
   upload-service:
     build: ./upload-service
     depends_on:
       - upload-postgres
       - rabbitmq
-    restart: on-failure  
+    #restart: on-failure  
     env_file:
     - ./.env
     environment:
@@ -21,8 +33,13 @@ services:
       B2_BUCKET_NAME: ${B2_BUCKET_NAME}
       B2_ENDPOINT: ${B2_ENDPOINT}
       B2_REGION: ${B2_REGION}
-    ports:
-      - "${UPLOAD_SERVICE_PORT}:${UPLOAD_SERVICE_PORT_DOCKER}"
+    # ports:
+    #   - "${UPLOAD_SERVICE_PORT}:${UPLOAD_SERVICE_PORT_DOCKER}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.upload.rule=PathPrefix(`/upload`)"
+      - "traefik.http.services.upload.loadbalancer.server.port=${UPLOAD_SERVICE_PORT_DOCKER}"
+    restart: on-failure
     #volumes:
     #  - ./upload-service:/app
   process-service:
@@ -30,7 +47,7 @@ services:
     depends_on:
       - process-postgres
       - rabbitmq
-    restart: on-failure
+    #restart: on-failure
     env_file:
     - ./.env
     environment:
@@ -45,15 +62,20 @@ services:
       B2_BUCKET_NAME: ${B2_BUCKET_NAME}
       B2_ENDPOINT: ${B2_ENDPOINT}
       B2_REGION: ${B2_REGION}
-    ports:
-      - "${PROCESS_SERVICE_PORT}:${PROCESS_SERVICE_PORT_DOCKER}"
+    # ports:
+    #   - "${PROCESS_SERVICE_PORT}:${PROCESS_SERVICE_PORT_DOCKER}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.process.rule=PathPrefix(`/process`)"
+      - "traefik.http.services.process.loadbalancer.server.port=${PROCESS_SERVICE_PORT_DOCKER}"
+    restart: on-failure
 
   metadata-service:
     build: ./metadata-service
     depends_on:
       - metadata-postgres
       - rabbitmq
-    restart: on-failure
+    #restart: on-failure
     env_file:
     - ./.env
     environment:
@@ -68,8 +90,29 @@ services:
       B2_BUCKET_NAME: ${B2_BUCKET_NAME}
       B2_ENDPOINT: ${B2_ENDPOINT}
       B2_REGION: ${B2_REGION}
-    ports:
-      - "${METADATA_SERVICE_PORT}:${METADATA_SERVICE_PORT_DOCKER}"
+    # ports:
+    #   - "${METADATA_SERVICE_PORT}:${METADATA_SERVICE_PORT_DOCKER}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.metadata.rule=PathPrefix(`/metadata`)"
+      - "traefik.http.services.metadata.loadbalancer.server.port=${METADATA_SERVICE_PORT_DOCKER}"
+    restart: on-failure
+  auth-service:
+    build: ./auth-service
+    depends_on:
+      - auth-postgres
+    env_file:
+      - ./.env
+    environment:
+      DB_NAME: ${AUTH_DB_NAME}
+      DB_USER: ${AUTH_DB_USER}
+      DB_PASS: ${AUTH_DB_PASS}
+      DB_HOST: ${AUTH_DB_HOST}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.auth.rule=PathPrefix(`/auth`)"
+      - "traefik.http.services.auth.loadbalancer.server.port=${AUTH_SERVICE_PORT_DOCKER}"
+    restart: on-failure
 
   upload-postgres:
     image: postgres:latest
@@ -105,6 +148,18 @@ services:
       - "5434:5432"
     volumes:
       - metadata_pg_data:/var/lib/postgresql/data
+  
+  auth-postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_DB: ${AUTH_DB_NAME}
+      POSTGRES_USER: ${AUTH_DB_USER}
+      POSTGRES_PASSWORD: ${AUTH_DB_PASS}
+    ports:
+      - "5435:5432" # İstersen dış erişim için aç, gerekmiyorsa kaldır
+    volumes:
+      - auth_pg_data:/var/lib/postgresql/data
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -119,3 +174,4 @@ volumes:
   upload_pg_data:
   process_pg_data:
   metadata_pg_data:
+  auth_pg_data:
