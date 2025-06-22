@@ -35,7 +35,7 @@ Services communicate asynchronously via **RabbitMQ**, while video files are stor
 
 ## 📊 Architecture Diagram
 
-![Architecture Diagram](./images/architecture-diagram.png)
+![Architecture Diagram](./images/transcodex.png)
 
 *The diagram illustrates the flow between clients, API Gateway, microservices, RabbitMQ messaging, and cloud storage.*
 
