@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { generateToken } from './tokenService.js';
+import { generateToken } from './auth.service.js';
 import { User } from '../models/user.model.js';
 const { Op } = require('sequelize');
 
