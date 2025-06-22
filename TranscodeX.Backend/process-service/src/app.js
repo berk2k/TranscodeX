@@ -12,6 +12,6 @@ const app = express();
 app.use(express.json());
 
 const jobRoutes = require('./routes/process.route');
-app.use('/api', jobRoutes);
+app.use('/', jobRoutes);
 
 module.exports = app;

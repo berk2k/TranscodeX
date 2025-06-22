@@ -38,7 +38,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.upload.rule=PathPrefix(`/upload`)"
-      - "traefik.http.routers.upload.middlewares=auth-middleware@file"
+      - "traefik.http.routers.upload.middlewares=upload-strip"
+      - "traefik.http.middlewares.upload-strip.stripprefix.prefixes=/upload"
       - "traefik.http.services.upload.loadbalancer.server.port=${UPLOAD_SERVICE_PORT_DOCKER}"
     restart: on-failure
     #volumes:
@@ -68,7 +69,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.process.rule=PathPrefix(`/process`)"
-      - "traefik.http.routers.process.middlewares=auth-middleware@file"
+      - "traefik.http.routers.process.middlewares=process-strip"
+      - "traefik.http.middlewares.process-strip.stripprefix.prefixes=/process"
       - "traefik.http.services.process.loadbalancer.server.port=${PROCESS_SERVICE_PORT_DOCKER}"
     restart: on-failure
 
@@ -97,7 +99,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.metadata.rule=PathPrefix(`/metadata`)"
-      - "traefik.http.routers.metadata.middlewares=auth-middleware@file"
+      - "traefik.http.routers.metadata.middlewares=metadata-strip"
+      - "traefik.http.middlewares.metadata-strip.stripprefix.prefixes=/metadata"
       - "traefik.http.services.metadata.loadbalancer.server.port=${METADATA_SERVICE_PORT_DOCKER}"
     restart: on-failure
   auth-service:
@@ -114,6 +117,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.auth.rule=PathPrefix(`/auth`)"
+      - "traefik.http.routers.auth.middlewares=auth-strip"
+      - "traefik.http.middlewares.auth-strip.stripprefix.prefixes=/auth"
       - "traefik.http.services.auth.loadbalancer.server.port=${AUTH_SERVICE_PORT_DOCKER}"
     restart: on-failure
 
