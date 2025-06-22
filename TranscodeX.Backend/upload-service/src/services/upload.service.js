@@ -7,7 +7,7 @@ const fs = require('fs');
 require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
 
 
-exports.processUpload = async (file) => {
+exports.processUpload = async (file, userId) => {
     const videoId = uuidv4()
     const filename = `${videoId}${path.extname(file.originalname)}`;
 
@@ -17,6 +17,7 @@ exports.processUpload = async (file) => {
 
     await Upload.create({
         id: videoId,
+        userId: userId,
         original_name: file.originalname,
         mime_type: file.mimetype,
         storage_key: storageKey,

@@ -7,7 +7,12 @@ exports.handleUpload = async (req, res) => {
             return res.status(400).json({ message: 'No file uploaded' });
         }
 
-        const result = await uploadService.processUpload(req.file);
+        const userId = req.headers['x-user-id']; //getting id from apigateway
+        if (!userId) {
+            return res.status(401).json({ message: 'Unauthorized: User ID missing from headers' });
+        }
+
+        const result = await uploadService.processUpload(req.file, userId);
         res.status(200).json({ message: 'Upload successful', data: result });
 
     } catch (error) {

@@ -7,6 +7,10 @@ const Upload = sequelize.define('Upload', {
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
+  userId: {  
+    type: DataTypes.UUID,
+    allowNull: false,
+  },
   original_name: {
     type: DataTypes.STRING,
     allowNull: false,
