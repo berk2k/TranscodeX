@@ -1,11 +1,11 @@
-import jwt from 'jsonwebtoken';
-import { jwt_config } from '../config/jwt.config.js';
+const jwt = require('jsonwebtoken');
+const { jwt_config } = require('../config/jwt.config');
 
-export const generateToken = (payload, expiresIn = '1h') => {
+const generateToken = (payload, expiresIn = '1h') => {
   return jwt.sign(payload, jwt_config.jwtSecret, { expiresIn });
 };
 
-export function verifyToken(token) {
+function verifyToken(token) {
   try {
     const decoded = jwt.verify(token, jwt_config.jwtSecret);
     return { valid: true, decoded };
@@ -13,3 +13,8 @@ export function verifyToken(token) {
     return { valid: false, error: err };
   }
 }
+
+module.exports = {
+  generateToken,
+  verifyToken,
+};

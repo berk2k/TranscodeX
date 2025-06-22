@@ -1,14 +1,13 @@
-import bcrypt from 'bcrypt';
-import { generateToken } from './auth.service.js';
-import { User } from '../models/user.model.js';
+const bcrypt = require('bcrypt');
+const { generateToken } = require('./auth.service');
+const User = require('../models/user.model');
 const { Op } = require('sequelize');
 
-export const createUser = async(username, email, password) => {
-
+const createUser = async (username, email, password) => {
     try {
-        const existingUser = findByEmailOrUsername(username,email)
+        const existingUser = await findByEmailOrUsername(username) || await findByEmailOrUsername(email);
         if (existingUser) {
-        throw new Error('Username or email already in use.');
+            throw new Error('Username or email already in use.');
         }
         const passwordHash = await bcrypt.hash(password, 10);
         const user = await User.create({
@@ -17,13 +16,13 @@ export const createUser = async(username, email, password) => {
             passwordHash,
         });
 
-        return user
-    } catch (error){
+        return user;
+    } catch (error) {
         throw new Error('Error creating user: ' + error.message);
     }
-}
+};
 
-export const loginUser = async ({ identifier, password }) => {
+const loginUser = async ({ identifier, password }) => {
   try {
     const user = await User.findOne({
       where: {
@@ -66,7 +65,7 @@ export const loginUser = async ({ identifier, password }) => {
   }
 };
 
-const findByEmailOrUsername = async(identifier) => {
+const findByEmailOrUsername = async (identifier) => {
   return await User.findOne({
     where: {
       [Op.or]: [
@@ -75,22 +74,28 @@ const findByEmailOrUsername = async(identifier) => {
       ]
     }
   });
-}
+};
 
-const findById = async(id) => {
+const findById = async (id) => {
     try {
         return await User.findByPk(id);
     } catch (error) {
         throw new Error('Error finding user: ' + error.message);
     }
-}
+};
 
-const verifyPassword = async(user, plainPassword) => {
+const verifyPassword = async (user, plainPassword) => {
     try {
-
-        return await bcrypt.compare(plainPassword, user.passwordHash);   
+        return await bcrypt.compare(plainPassword, user.passwordHash);
     } catch (error) {
         throw new Error('Password invalid: ' + error.message);
     }
-}
+};
 
+module.exports = {
+  createUser,
+  loginUser,
+  findByEmailOrUsername,
+  findById,
+  verifyPassword,
+};

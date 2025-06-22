@@ -1,5 +1,5 @@
-import express from 'express';
-import { validateController,login,register } from '../controllers/auth.controller.js';
+const express = require('express');
+const { validateController, login, register } = require('../controllers/auth.controller');
 
 const router = express.Router();
 
@@ -7,4 +7,4 @@ router.get('/validate', validateController);
 router.post('/register', register);
 router.post('/login', login);
 
-export default router;
+module.exports = router;
