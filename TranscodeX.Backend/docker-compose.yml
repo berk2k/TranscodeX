@@ -12,6 +12,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/traefik.yml:/etc/traefik/traefik.yml
+      - ./traefik/dynamic.yml:/etc/traefik/dynamic.yml 
     restart: unless-stopped
   upload-service:
     build: ./upload-service
@@ -38,7 +39,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.upload.rule=PathPrefix(`/upload`)"
-      - "traefik.http.routers.upload.middlewares=upload-strip"
+      - "traefik.http.routers.upload.middlewares=upload-strip,auth-middleware@file"
       - "traefik.http.middlewares.upload-strip.stripprefix.prefixes=/upload"
       - "traefik.http.services.upload.loadbalancer.server.port=${UPLOAD_SERVICE_PORT_DOCKER}"
     restart: on-failure
@@ -99,7 +100,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.metadata.rule=PathPrefix(`/metadata`)"
-      - "traefik.http.routers.metadata.middlewares=metadata-strip"
+      - "traefik.http.routers.metadata.middlewares=auth-middleware@file,metadata-strip"
       - "traefik.http.middlewares.metadata-strip.stripprefix.prefixes=/metadata"
       - "traefik.http.services.metadata.loadbalancer.server.port=${METADATA_SERVICE_PORT_DOCKER}"
     restart: on-failure
