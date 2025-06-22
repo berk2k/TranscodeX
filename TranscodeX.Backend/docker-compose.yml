@@ -50,7 +50,7 @@ services:
     depends_on:
       - process-postgres
       - rabbitmq
-    #restart: on-failure
+    restart: on-failure
     env_file:
     - ./.env
     environment:
@@ -65,15 +65,15 @@ services:
       B2_BUCKET_NAME: ${B2_BUCKET_NAME}
       B2_ENDPOINT: ${B2_ENDPOINT}
       B2_REGION: ${B2_REGION}
-    # ports:
-    #   - "${PROCESS_SERVICE_PORT}:${PROCESS_SERVICE_PORT_DOCKER}"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.process.rule=PathPrefix(`/process`)"
-      - "traefik.http.routers.process.middlewares=process-strip"
-      - "traefik.http.middlewares.process-strip.stripprefix.prefixes=/process"
-      - "traefik.http.services.process.loadbalancer.server.port=${PROCESS_SERVICE_PORT_DOCKER}"
-    restart: on-failure
+    ports:
+      - "${PROCESS_SERVICE_PORT}:${PROCESS_SERVICE_PORT_DOCKER}"
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.process.rule=PathPrefix(`/process`)"
+    #   - "traefik.http.routers.process.middlewares=process-strip"
+    #   - "traefik.http.middlewares.process-strip.stripprefix.prefixes=/process"
+    #   - "traefik.http.services.process.loadbalancer.server.port=${PROCESS_SERVICE_PORT_DOCKER}"
+    # restart: on-failure
 
   metadata-service:
     build: ./metadata-service
