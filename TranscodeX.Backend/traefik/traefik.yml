@@ -6,6 +6,18 @@ providers:
   docker:
     exposedByDefault: false
 
+http:
+  middlewares:
+    auth-middleware:
+      forwardAuth:
+        address: "http://auth-service:3007/api/auth/validate"
+        trustForwardHeader: true
+        authResponseHeaders:
+          - "X-User-Id"
+          - "X-Username"
+          - "X-User-Role"
+
 api:
   dashboard: true
   insecure: true
+
