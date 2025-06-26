@@ -48,7 +48,7 @@ describe('processUpload', () => {
   });
 
   it('should send a queue message with a videoId', async () => {
-    const result = await processUpload(fakeFile,'test_queue');
+    const result = await processUpload(fakeFile, 'mock-user-id', 'test-queue');
     expect(sendToQueue).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({
       videoId: expect.any(String)
     }));
