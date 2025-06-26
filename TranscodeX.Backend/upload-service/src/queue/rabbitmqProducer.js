@@ -36,22 +36,19 @@ const initRabbitMQ = async () => {
 };
 
 const sendToQueue = async (queueName, payload) => {
-  if (!channel) {
-    await initRabbitMQ();
-  }
+  if (!channel) await initRabbitMQ();
+  if (!channel) throw new Error('RabbitMQ channel is not initialized');
 
-  if (!channel) {
-    throw new Error('RabbitMQ channel is not initialized');
-  }
-
-  const messageWithTimestamp = {
-    ...payload,
-    createdAt: Date.now(),
-  };
+  const startTime = Date.now();
+  console.log(`Sending message to ${queueName} at ${startTime}`);
 
   const buffer = Buffer.from(JSON.stringify(payload));
   channel.sendToQueue(queueName, buffer, { persistent: true });
-  console.log(`Message sent to queue [${queueName}]:`, payload);
+
+  const endTime = Date.now();
+  console.log(`Message sent to queue [${queueName}] at ${endTime}`);
+  console.log(`Message send duration: ${endTime - startTime} ms`);
 };
+
 
 module.exports = { sendToQueue };

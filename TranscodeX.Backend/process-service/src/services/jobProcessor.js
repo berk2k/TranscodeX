@@ -16,6 +16,7 @@ exports.handleJob = async ({ videoId, storageKey, userId }) => {
   const processedStorageKey = `${videoId}-processed.mp4`;
 
   let job = null;
+  const startTime = Date.now();
 
   try {
     console.log(`[${videoId}] Process started`);
@@ -45,6 +46,8 @@ exports.handleJob = async ({ videoId, storageKey, userId }) => {
       });
     }
   } finally {
+    const durationMs = Date.now() - startTime;
+    console.log(`[${videoId}] Processing time: ${durationMs} ms`);
     [originalFilePath, processedFilePath].forEach(file => {
       if (fs.existsSync(file)) fs.unlinkSync(file);
     });
