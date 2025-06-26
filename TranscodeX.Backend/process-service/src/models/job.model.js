@@ -10,7 +10,7 @@ const Job = sequelize.define('Job', {
     type: DataTypes.UUID,
     allowNull: false,
   },
-  userId: {  
+  user_id: {  
     type: DataTypes.UUID,
     allowNull: false,
   },

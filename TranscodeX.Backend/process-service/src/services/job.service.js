@@ -8,7 +8,7 @@ const createJob = async ({ videoId, storageKey, userId }) => {
   const job = await Job.create({
     id: jobId,
     video_id: videoId,
-    userId: userId,
+    user_id: userId,
     storage_key: storageKey,
     status: 'processing',     
     created_at: now,
