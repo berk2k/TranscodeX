@@ -25,7 +25,7 @@ exports.processUpload = async (file, userId) => {
         uploaded_at: new Date()
     });
 
-    const jobPayload = { videoId, storageKey };
+    const jobPayload = { videoId, storageKey, userId };
     await sendToQueue(process.env.UPLOAD_RABBITMQ_QUEUE, jobPayload); // rabbitMQ
 
     return jobPayload;
