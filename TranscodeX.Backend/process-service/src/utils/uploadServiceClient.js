@@ -5,7 +5,8 @@ const UPLOAD_SERVICE_URL = process.env.UPLOAD_SERVICE_URL;
 
 async function updateUploadStatus(id, status) {
   try {
-    await axios.patch(`${UPLOAD_SERVICE_URL}/uploads/${id}/status`, { status });
+    const baseUrl = process.env.UPLOAD_SERVICE_URL;
+    await axios.patch(`${baseUrl}/uploads/${id}/status`, { status });
     console.log(`Upload status updated to ${status} for video ${id}`);
   } catch (err) {
     console.error('Failed to update upload status:', err.message);
