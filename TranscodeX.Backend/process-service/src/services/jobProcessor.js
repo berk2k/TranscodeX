@@ -10,7 +10,7 @@ const {sendToQueue} = require('../queue/producer')
 const tempDir = path.resolve(__dirname, '../../temp');
 if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir);
 
-exports.handleJob = async ({ videoId, storageKey }) => {
+exports.handleJob = async ({ videoId, storageKey, userId }) => {
   const originalFilePath = path.join(tempDir, `${videoId}-original`);
   const processedFilePath = path.join(tempDir, `${videoId}-processed.mp4`);
   const processedStorageKey = `${videoId}-processed.mp4`;
@@ -22,7 +22,7 @@ exports.handleJob = async ({ videoId, storageKey }) => {
 
     const signedUrl = await generateSignedUrl(storageKey);
 
-    job = await createJob({ videoId, storageKey });
+    job = await createJob({ videoId, storageKey, userId });
 
 
     await downloadFile(signedUrl, originalFilePath);

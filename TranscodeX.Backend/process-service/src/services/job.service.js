@@ -1,13 +1,14 @@
 const { v4: uuidv4 } = require('uuid');
 const Job = require('../models/job.model');
 
-const createJob = async ({ videoId, storageKey }) => {
+const createJob = async ({ videoId, storageKey, userId }) => {
   const jobId = uuidv4();
   const now = new Date();
 
   const job = await Job.create({
     id: jobId,
     video_id: videoId,
+    userId: userId,
     storage_key: storageKey,
     status: 'processing',     
     created_at: now,
