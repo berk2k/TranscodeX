@@ -11,7 +11,7 @@ exports.handleMetadataJob = async ({ videoId, processedStorageKey }) => {
 
   try {
     console.log(`[${videoId}] Metadata processing started with key: ${processedStorageKey}`);
-
+    const startTime = Date.now();
     const signedUrl = await generateSignedUrl(processedStorageKey);
     await downloadFile(signedUrl, tempFilePath);
 
@@ -27,6 +27,8 @@ exports.handleMetadataJob = async ({ videoId, processedStorageKey }) => {
     });
 
     console.log(`[${videoId}] Metadata saved successfully.`);
+    const durationMs = Date.now() - startTime;
+    console.log(`[${videoId}] Processing time: ${durationMs} ms`);
   } catch (err) {
     console.error(`[${videoId}] Metadata error:`, err);
   } finally {
