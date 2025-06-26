@@ -7,7 +7,7 @@ const fs = require('fs');
 require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
 
 
-exports.processUpload = async (file, userId) => {
+exports.processUpload = async (file, userId, queueName = process.env.UPLOAD_RABBITMQ_QUEUE) => {
     const videoId = uuidv4()
     const filename = `${videoId}${path.extname(file.originalname)}`;
 
@@ -26,7 +26,7 @@ exports.processUpload = async (file, userId) => {
     });
 
     const jobPayload = { videoId, storageKey, userId };
-    await sendToQueue(process.env.UPLOAD_RABBITMQ_QUEUE, jobPayload); // rabbitMQ
+    await sendToQueue(queueName, jobPayload); // rabbitMQ
 
     return jobPayload;
 };
