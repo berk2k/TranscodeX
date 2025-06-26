@@ -44,6 +44,11 @@ const sendToQueue = async (queueName, payload) => {
     throw new Error('RabbitMQ channel is not initialized');
   }
 
+    const messageWithTimestamp = {
+    ...payload,
+    createdAt: Date.now(),
+  };
+
   const buffer = Buffer.from(JSON.stringify(payload));
   channel.sendToQueue(queueName, buffer, { persistent: true });
   console.log(`Message sent to queue [${queueName}]:`, payload);
