@@ -10,6 +10,10 @@ const Job = sequelize.define('Job', {
     type: DataTypes.UUID,
     allowNull: false,
   },
+  userId: {  
+    type: DataTypes.UUID,
+    allowNull: false,
+  },
   storage_key: {
     type: DataTypes.STRING,
     allowNull: false,
