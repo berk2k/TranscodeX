@@ -51,4 +51,4 @@ const sendToQueue = async (queueName, payload) => {
 };
 
 
-module.exports = { sendToQueue };
+module.exports = { sendToQueue, initRabbitMQ };
