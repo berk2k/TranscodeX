@@ -8,25 +8,40 @@ require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
 
 
 exports.processUpload = async (file, userId, queueName = process.env.UPLOAD_RABBITMQ_QUEUE) => {
-    const videoId = uuidv4()
-    const filename = `${videoId}${path.extname(file.originalname)}`;
+    console.log('--- processUpload called ---');
+    console.log('file:', file);
+    console.log('userId:', userId);
 
-    const storageKey = await uploadToB2(file.path, filename);
+    try {
+        const videoId = uuidv4();
+        const filename = `${videoId}${path.extname(file.originalname)}`;
+        console.log('Generated filename:', filename);
 
-    fs.unlinkSync(file.path); //delete local file 
+        const storageKey = await uploadToB2(file.path, filename);
+        console.log('Uploaded to B2:', storageKey);
 
-    await Upload.create({
-        id: videoId,
-        userId: userId,
-        original_name: file.originalname,
-        mime_type: file.mimetype,
-        storage_key: storageKey,
-        status: 'pending',
-        uploaded_at: new Date()
-    });
+        fs.unlinkSync(file.path); // delete temp file
+        console.log('Temp file deleted');
 
-    const jobPayload = { videoId, storageKey, userId };
-    await sendToQueue(queueName, jobPayload); // rabbitMQ
+        await Upload.create({
+            id: videoId,
+            userId: userId,
+            original_name: file.originalname,
+            mime_type: file.mimetype,
+            storage_key: storageKey,
+            status: 'pending',
+            uploaded_at: new Date()
+        });
 
-    return jobPayload;
+        console.log('Upload record created in DB');
+
+        const jobPayload = { videoId, storageKey, userId };
+        await sendToQueue(queueName, jobPayload);
+        console.log('Job sent to queue:', queueName);
+
+        return jobPayload;
+    } catch (error) {
+        console.error('processUpload error:', error);
+        throw error;
+    }
 };
