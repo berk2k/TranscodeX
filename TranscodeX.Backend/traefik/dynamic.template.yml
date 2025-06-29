@@ -3,12 +3,15 @@ http:
     auth-middleware:
       forwardAuth:
         address: "${AUTH_VALIDATE_URL}"
-        trustForwardHeader: false
+        trustForwardHeader: true
         authResponseHeaders:
           - "X-User-Id"
           - "X-Username"
           - "X-User-Role"
-
+        authRequestHeaders:
+          - "Authorization"
+          - "Cookie"
+    
     upload-strip:
       stripPrefix:
         prefixes:

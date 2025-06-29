@@ -9,5 +9,5 @@ providers:
     watch: true
 
 api:
-  dashboard: true
+  dashboard: false
   insecure: true
