@@ -3,37 +3,26 @@ const Upload = require('../models/upload.model');
 
 exports.handleUpload = async (req, res) => {
   try {
-    console.log('---- Upload Request Received ----');
-    console.log('Headers:', req.headers);
-    console.log('req.file:', req.file);
-    console.log('req.body:', req.body);
-
     if (!req.file) {
-      console.log('No file found in request.');
       return res.status(400).json({ message: 'No file uploaded' });
     }
 
     const userId = req.headers['x-user-id'];
     if (!userId) {
-      console.log('Missing x-user-id header.');
       return res.status(401).json({ message: 'Unauthorized: User ID missing from headers' });
     }
 
-    try {
-      console.log('Calling processUpload...');
-      const result = await uploadService.processUpload(req.file, userId);
-      console.log('Upload success:', result);
+    const result = await uploadService.processUpload(req.file, userId, process.env.UPLOAD_RABBITMQ_QUEUE, res);
+
+    if (result && !result.message) {
       return res.status(200).json({ message: 'Upload successful', data: result });
-    } catch (uploadError) {
-      console.error('Error in processUpload:', uploadError);
-      return res.status(500).json({ message: 'Internal server error during upload processing' });
     }
-    
+    // processUpload hata ile dönerse response zaten gitmiş olur, buraya genelde gelmez
   } catch (error) {
-    console.error('Unexpected error in handleUpload:', error);
-    return res.status(500).json({ message: 'Internal server error at HandleUpload' });
+    return res.status(500).json({ message: 'Internal server error at handleUpload', error: error.message });
   }
 };
+
 
 
 

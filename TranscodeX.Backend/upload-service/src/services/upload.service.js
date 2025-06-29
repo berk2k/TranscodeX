@@ -7,42 +7,47 @@ const fs = require('fs');
 require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
 
 
-exports.processUpload = async (file, userId, queueName = process.env.UPLOAD_RABBITMQ_QUEUE) => {
-    console.log('--- processUpload called ---');
-    console.log('file:', file);
-    console.log('userId:', userId);
+exports.processUpload = async (file, userId, queueName = process.env.UPLOAD_RABBITMQ_QUEUE, res) => {
+  try {
+    const videoId = uuidv4();
+    const filename = `${videoId}${path.extname(file.originalname)}`;
+
+    let storageKey;
+    try {
+      storageKey = await uploadToB2(file.path, filename);
+    } catch (b2Error) {
+      return res.status(500).json({ message: 'B2 upload error', error: b2Error.message });
+    }
 
     try {
-        const videoId = uuidv4();
-        const filename = `${videoId}${path.extname(file.originalname)}`;
-        console.log('Generated filename:', filename);
-
-        const storageKey = await uploadToB2(file.path, filename);
-        console.log('Uploaded to B2:', storageKey);
-
-        fs.unlinkSync(file.path); // delete temp file
-        console.log('Temp file deleted');
-        
-        await Upload.create({
-            id: videoId,
-            userId: userId,
-            original_name: file.originalname,
-            mime_type: file.mimetype,
-            storage_key: storageKey,
-            status: 'pending',
-            uploaded_at: new Date()
-        });
-
-        console.log('Upload record created in DB');
-
-        const jobPayload = { videoId, storageKey, userId };
-        await sendToQueue(queueName, jobPayload);
-        console.log('Job sent to queue:', queueName);
-
-        return jobPayload;
-    } catch (error) {
-        console.error('processUpload error:', error);
-        res.status(500).json({ message: 'Internal server error at process upload' });
-        throw error;
+      fs.unlinkSync(file.path);
+    } catch (fsError) {
+      // burası kritik değilse sadece logla geçebilirsin
     }
+
+    try {
+      await Upload.create({
+        id: videoId,
+        userId,
+        original_name: file.originalname,
+        mime_type: file.mimetype,
+        storage_key: storageKey,
+        status: 'pending',
+        uploaded_at: new Date()
+      });
+    } catch (dbError) {
+      return res.status(500).json({ message: 'Database insert error', error: dbError.message });
+    }
+
+    try {
+      const jobPayload = { videoId, storageKey, userId };
+      await sendToQueue(queueName, jobPayload);
+      return jobPayload;
+    } catch (queueError) {
+      return res.status(500).json({ message: 'Queue sending error', error: queueError.message });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: 'Unknown error during upload processing', error: error.message });
+  }
 };
+
