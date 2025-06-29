@@ -23,15 +23,15 @@ exports.processUpload = async (file, userId, queueName = process.env.UPLOAD_RABB
         fs.unlinkSync(file.path); // delete temp file
         console.log('Temp file deleted');
 
-        await Upload.create({
-            id: videoId,
-            userId: userId,
-            original_name: file.originalname,
-            mime_type: file.mimetype,
-            storage_key: storageKey,
-            status: 'pending',
-            uploaded_at: new Date()
-        });
+        // await Upload.create({
+        //     id: videoId,
+        //     userId: userId,
+        //     original_name: file.originalname,
+        //     mime_type: file.mimetype,
+        //     storage_key: storageKey,
+        //     status: 'pending',
+        //     uploaded_at: new Date()
+        // });
 
         console.log('Upload record created in DB');
 
