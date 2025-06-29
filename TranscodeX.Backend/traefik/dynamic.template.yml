@@ -8,3 +8,22 @@ http:
           - "X-User-Id"
           - "X-Username"
           - "X-User-Role"
+
+    upload-strip:
+      stripPrefix:
+        prefixes:
+          - "/upload"
+
+  routers:
+    upload:
+      rule: "PathPrefix(`/upload`)"
+      middlewares:
+        - auth-middleware
+        - upload-strip
+      service: upload-service
+
+  services:
+    upload-service:
+      loadBalancer:
+        servers:
+          - url: "${UPLOAD_AZURE_URL}"
