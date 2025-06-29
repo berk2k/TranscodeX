@@ -4,5 +4,8 @@ RUN apk add --no-cache gettext
 
 COPY traefik.yml /etc/traefik/traefik.yml
 COPY dynamic.template.yml /etc/traefik/dynamic.template.yml
+COPY start.sh /start.sh
 
-ENTRYPOINT [ "sh", "-c", "envsubst < /etc/traefik/dynamic.template.yml > /etc/traefik/dynamic.yml && traefik --configFile=/etc/traefik/traefik.yml" ]
+RUN chmod +x /start.sh
+
+ENTRYPOINT ["/start.sh"]
