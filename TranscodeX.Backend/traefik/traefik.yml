@@ -1,8 +1,7 @@
 entryPoints:
   web:
-    address: ":80"
-  websecure:
-    address: ":443"
+    address: ":$PORT"
+
 
 providers:
   file:
