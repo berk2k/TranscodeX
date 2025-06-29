@@ -2,7 +2,6 @@ entryPoints:
   web:
     address: ":$PORT"
 
-
 providers:
   file:
     filename: /etc/traefik/dynamic.yml
