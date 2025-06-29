@@ -24,4 +24,4 @@ http:
       loadBalancer:
         servers:
           - url: "${UPLOAD_AZURE_URL}"
-      passHostHeader: false
+        passHostHeader: false
