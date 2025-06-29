@@ -36,7 +36,7 @@ const initRabbitMQ = async () => {
 };
 
 const sendToQueue = async (queueName, payload) => {
-  if (!channel) await initRabbitMQ();
+  
   if (!channel) throw new Error('RabbitMQ channel is not initialized');
 
   const startTime = Date.now();
