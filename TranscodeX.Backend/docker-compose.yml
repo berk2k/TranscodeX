@@ -10,7 +10,7 @@ services:
       - "80:80"       # HTTP
       - "8080:8080"   # Traefik dashboard
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+    #  - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/traefik.yml:/etc/traefik/traefik.yml
       - ./traefik/dynamic.yml:/etc/traefik/dynamic.yml 
     restart: unless-stopped
