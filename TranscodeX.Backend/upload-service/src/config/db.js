@@ -6,13 +6,13 @@ const sequelize = new Sequelize(process.env.UPLOAD_DB_NAME, process.env.AZURE_DB
   host: process.env.AZURE_DB_HOST,
   dialect: 'postgres',
   logging: false,
-    dialectOptions: {
+  dialectOptions: {
     ssl: {
       require: true,
       rejectUnauthorized: false
     }
   },
-
+  
   port: 5432
 });
 
