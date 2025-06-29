@@ -11,18 +11,12 @@ http:
         authRequestHeaders:
           - "Authorization"
           - "Cookie"
-    
-    upload-strip:
-      stripPrefix:
-        prefixes:
-          - "/upload"
 
   routers:
     upload:
       rule: "PathPrefix(`/upload`)"
       middlewares:
         - auth-middleware
-        - upload-strip
       service: upload-service
 
   services:
@@ -30,4 +24,4 @@ http:
       loadBalancer:
         servers:
           - url: "${UPLOAD_AZURE_URL}"
-        passHostHeader: false
+      passHostHeader: false
