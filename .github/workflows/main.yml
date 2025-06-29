@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD Pipeline
 
 on:
   push:
@@ -6,8 +6,12 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+  DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+
 jobs:
-  upload-service:
+  upload-service-tests:
     name: Upload Service Tests
     runs-on: ubuntu-latest
     steps:
@@ -22,7 +26,7 @@ jobs:
         run: npm test
         working-directory: ./TranscodeX.Backend/upload-service
 
-  process-service:
+  process-service-tests:
     name: Process Service Tests
     runs-on: ubuntu-latest
     steps:
@@ -36,8 +40,8 @@ jobs:
       - name: Run tests
         run: npm test
         working-directory: ./TranscodeX.Backend/process-service
-    
-  metadata-service:
+
+  metadata-service-tests:
     name: Metadata Service Tests
     runs-on: ubuntu-latest
     steps:
@@ -52,3 +56,33 @@ jobs:
         run: npm test
         working-directory: ./TranscodeX.Backend/metadata-service
 
+  docker-build-and-push:
+    name: Build & Push Docker Images
+    runs-on: ubuntu-latest
+    needs:
+      - upload-service-tests
+      - process-service-tests
+      - metadata-service-tests
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ env.DOCKERHUB_USERNAME }}
+          password: ${{ env.DOCKERHUB_TOKEN }}
+
+      - name: Build and push upload-service image
+        run: |
+          docker build -t ${{ env.DOCKERHUB_USERNAME }}/transcodex-upload-service:latest ./TranscodeX.Backend/upload-service
+          docker push ${{ env.DOCKERHUB_USERNAME }}/transcodex-upload-service:latest
+
+      - name: Build and push process-service image
+        run: |
+          docker build -t ${{ env.DOCKERHUB_USERNAME }}/transcodex-process-service:latest ./TranscodeX.Backend/process-service
+          docker push ${{ env.DOCKERHUB_USERNAME }}/transcodex-process-service:latest
+
+      - name: Build and push metadata-service image
+        run: |
+          docker build -t ${{ env.DOCKERHUB_USERNAME }}/transcodex-metadata-service:latest ./TranscodeX.Backend/metadata-service
+          docker push ${{ env.DOCKERHUB_USERNAME }}/transcodex-metadata-service:latest
