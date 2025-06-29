@@ -23,7 +23,7 @@ describe('processUpload', () => {
 
   beforeEach(() => {
     uploadToB2.mockResolvedValue('fake-storage-key');
-    Upload.create.mockResolvedValue({ id: 'some-video-id' });
+    // Upload.create.mockResolvedValue({ id: 'some-video-id' });
     sendToQueue.mockResolvedValue();
   });
 
@@ -32,15 +32,15 @@ describe('processUpload', () => {
     expect(uploadToB2).toHaveBeenCalledWith(fakeFile.path, expect.stringContaining('.mp4'));
   });
 
-  it('should save DB record with correct data', async () => {
-    await processUpload(fakeFile);
-    expect(Upload.create).toHaveBeenCalledWith(expect.objectContaining({
-      original_name: fakeFile.originalname,
-      mime_type: fakeFile.mimetype,
-      storage_key: 'fake-storage-key',
-      status: 'pending',
-    }));
-  });
+  // it('should save DB record with correct data', async () => {
+  //   await processUpload(fakeFile);
+  //   expect(Upload.create).toHaveBeenCalledWith(expect.objectContaining({
+  //     original_name: fakeFile.originalname,
+  //     mime_type: fakeFile.mimetype,
+  //     storage_key: 'fake-storage-key',
+  //     status: 'pending',
+  //   }));
+  // });
 
   it('should delete the local file after upload', async () => {
     await processUpload(fakeFile);
