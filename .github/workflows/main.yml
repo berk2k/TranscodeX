@@ -70,20 +70,20 @@ jobs:
 
       - name: Build and push upload-service image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/transcodex:upload-service:latest -f ./TranscodeX.Backend/upload-service/DockerFile ./TranscodeX.Backend/upload-service
-          docker push ${{ secrets.DOCKER_USERNAME }}/transcodex:upload-service:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/transcodex:upload-service-latest -f ./TranscodeX.Backend/upload-service/DockerFile ./TranscodeX.Backend/upload-service
+          docker push ${{ secrets.DOCKER_USERNAME }}/transcodex:upload-service-latest
 
       - name: Build and push process-service image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/transcodex:process-service:latest ./TranscodeX.Backend/process-service
-          docker push ${{ secrets.DOCKER_USERNAME }}/transcodex:process-service:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/transcodex:process-service-latest ./TranscodeX.Backend/process-service
+          docker push ${{ secrets.DOCKER_USERNAME }}/transcodex:process-service-latest
 
       - name: Build and push metadata-service image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/transcodex:metadata-service:latest ./TranscodeX.Backend/metadata-service
-          docker push ${{ secrets.DOCKER_USERNAME }}/transcodex:metadata-service:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/transcodex:metadata-service-latest ./TranscodeX.Backend/metadata-service
+          docker push ${{ secrets.DOCKER_USERNAME }}/transcodex:metadata-service-latest
       
       - name: Build and push auth-service image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/transcodex:auth-service:latest ./TranscodeX.Backend/auth-service
-          docker push ${{ secrets.DOCKER_USERNAME }}/transcodex:auth-service:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/transcodex:auth-service-latest ./TranscodeX.Backend/auth-service
+          docker push ${{ secrets.DOCKER_USERNAME }}/transcodex:auth-service-latest
