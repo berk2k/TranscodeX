@@ -70,20 +70,20 @@ jobs:
 
       - name: Build and push upload-service image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/transcodex-upload-service:latest -f ./TranscodeX.Backend/upload-service/Dockerfile ./TranscodeX.Backend/upload-service
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/transcodex-upload-service:latest -f ./TranscodeX.Backend/upload-service/DockerFile ./TranscodeX.Backend/upload-service
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/transcodex-upload-service:latest
 
       - name: Build and push process-service image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/transcodex-process-service:latest -f ./TranscodeX.Backend/process-service/Dockerfile ./TranscodeX.Backend/process-service
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/transcodex-process-service:latest ./TranscodeX.Backend/process-service
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/transcodex-process-service:latest
 
       - name: Build and push metadata-service image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/transcodex-metadata-service:latest -f ./TranscodeX.Backend/metadata-service/Dockerfile ./TranscodeX.Backend/metadata-service
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/transcodex-metadata-service:latest ./TranscodeX.Backend/metadata-service
           docker push ${{ secrets.DOCKER_USERNAME }}/transcodex-metadata-service:latest
       
       - name: Build and push auth-service image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/transcodex-auth-service:latest -f ./TranscodeX.Backend/auth-service/Dockerfile ./TranscodeX.Backend/auth-service
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/transcodex-auth-service:latest ./TranscodeX.Backend/auth-service
           docker push ${{ secrets.DOCKER_USERNAME }}/transcodex-auth-service:latest
