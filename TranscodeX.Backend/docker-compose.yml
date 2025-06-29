@@ -17,16 +17,16 @@ services:
   upload-service:
     build: ./upload-service
     depends_on:
-      - upload-postgres
+    #  - upload-postgres
       - rabbitmq
     #restart: on-failure  
     env_file:
     - ./.env
     environment:
       DB_NAME: ${UPLOAD_DB_NAME}
-      DB_USER: ${UPLOAD_DB_USER}
-      DB_PASS: ${UPLOAD_DB_PASS}
-      DB_HOST: ${UPLOAD_DB_HOST}
+      DB_USER: ${AZURE_DB_USER}
+      DB_PASS: ${AZURE_DB_PASS}
+      DB_HOST: ${AZURE_DB_HOST}
       RABBITMQ_URL: ${UPLOAD_RABBITMQ_URL}
       RABBITMQ_QUEUE: ${UPLOAD_RABBITMQ_QUEUE}
       B2_KEY_ID: ${B2_KEY_ID}
@@ -48,16 +48,16 @@ services:
   process-service:
     build: ./process-service
     depends_on:
-      - process-postgres
+  #    - process-postgres
       - rabbitmq
     restart: on-failure
     env_file:
     - ./.env
     environment:
       DB_NAME: ${PROCESS_DB_NAME}
-      DB_USER: ${PROCESS_DB_USER}
-      DB_PASS: ${PROCESS_DB_PASS}
-      DB_HOST: ${PROCESS_DB_HOST}
+      DB_USER: ${AZURE_DB_USER}
+      DB_PASS: ${AZURE_DB_PASS}
+      DB_HOST: ${AZURE_DB_HOST}
       RABBITMQ_URL: ${UPLOAD_RABBITMQ_URL}
       RABBITMQ_QUEUE: ${UPLOAD_RABBITMQ_QUEUE}
       B2_KEY_ID: ${B2_KEY_ID}
@@ -65,8 +65,8 @@ services:
       B2_BUCKET_NAME: ${B2_BUCKET_NAME}
       B2_ENDPOINT: ${B2_ENDPOINT}
       B2_REGION: ${B2_REGION}
-    ports:
-      - "${PROCESS_SERVICE_PORT}:${PROCESS_SERVICE_PORT_DOCKER}"
+    # ports:
+    #   - "${PROCESS_SERVICE_PORT}:${PROCESS_SERVICE_PORT_DOCKER}"
     # labels:
     #   - "traefik.enable=true"
     #   - "traefik.http.routers.process.rule=PathPrefix(`/process`)"
@@ -78,16 +78,16 @@ services:
   metadata-service:
     build: ./metadata-service
     depends_on:
-      - metadata-postgres
+    #  - metadata-postgres
       - rabbitmq
     #restart: on-failure
     env_file:
     - ./.env
     environment:
       DB_NAME: ${METADATA_DB_NAME}
-      DB_USER: ${METADATA_DB_USER}
-      DB_PASS: ${METADATA_DB_PASS}
-      DB_HOST: ${METADATA_DB_HOST}
+      DB_USER: ${AZURE_DB_USER}
+      DB_PASS: ${AZURE_DB_PASS}
+      DB_HOST: ${AZURE_DB_HOST}
       RABBITMQ_URL: ${UPLOAD_RABBITMQ_URL}
       RABBITMQ_QUEUE: ${PROCESSED_RABBITMQ_QUEUE}
       B2_KEY_ID: ${B2_KEY_ID}
@@ -106,15 +106,15 @@ services:
     restart: on-failure
   auth-service:
     build: ./auth-service
-    depends_on:
-      - auth-postgres
+    # depends_on:
+    #   - auth-postgres
     env_file:
       - ./.env
     environment:
       DB_NAME: ${AUTH_DB_NAME}
-      DB_USER: ${AUTH_DB_USER}
-      DB_PASS: ${AUTH_DB_PASS}
-      DB_HOST: ${AUTH_DB_HOST}
+      DB_USER: ${AZURE_DB_USER}
+      DB_PASS: ${AZURE_DB_PASS}
+      DB_HOST: ${AZURE_DB_HOST}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.auth.rule=PathPrefix(`/auth`)"
