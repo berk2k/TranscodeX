@@ -5,11 +5,10 @@ entryPoints:
     address: ":8080"
 
 providers:
-  docker:
-    exposedByDefault: false
   file:
-    filename: /etc/traefik/dynamic.yml    
+    filename: /etc/traefik/dynamic.yml
     watch: true
+
 
 api:
   dashboard: true
