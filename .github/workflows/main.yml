@@ -71,12 +71,12 @@ jobs:
       - name: Build and push upload-service image
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/transcodex-upload-service:latest -f ./TranscodeX.Backend/upload-service/DockerFile ./TranscodeX.Backend/upload-service
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/transcodex-upload-service:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/transcodex-upload-service:latest
 
       - name: Build and push process-service image
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/transcodex-process-service:latest ./TranscodeX.Backend/process-service
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/transcodex-process-service:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/transcodex-process-service:latest
 
       - name: Build and push metadata-service image
         run: |
