@@ -2,6 +2,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.828.0",
     "dotenv": "^16.5.0",
+    "envsubst": "^4.0.0",
     "mime-types": "^3.0.1"
   }
 }

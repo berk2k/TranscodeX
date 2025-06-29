@@ -1,0 +1,10 @@
+http:
+  middlewares:
+    auth-middleware:
+      forwardAuth:
+        address: "${AUTH_VALIDATE_URL}"
+        trustForwardHeader: false
+        authResponseHeaders:
+          - "X-User-Id"
+          - "X-Username"
+          - "X-User-Role"
