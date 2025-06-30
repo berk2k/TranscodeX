@@ -22,7 +22,7 @@ exports.processUpload = async (file, userId, queueName = process.env.UPLOAD_RABB
     try {
       fs.unlinkSync(file.path);
     } catch (fsError) {
-      // burası kritik değilse sadece logla geçebilirsin
+      
     }
 
     try {

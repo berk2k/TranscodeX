@@ -92,4 +92,42 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/transcodex:traefik-latest ./TranscodeX.Backend/traefik
           docker push ${{ secrets.DOCKER_USERNAME }}/transcodex:traefik-latest
-      
+
+      # Azure login
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Deploy upload-service to Azure Web App
+      - name: Deploy upload-service to Azure Web App
+        run: |
+          az webapp config container set \
+            --resource-group ${{secrets.RESOURCE_GROUP}} \
+            --name ${{secrets.UPLOAD_APP_NAME}} \
+            --docker-custom-image-name ${{ secrets.DOCKER_USERNAME }}/transcodex:upload-service-latest \
+            --docker-registry-server-url https://docker.io
+
+      - name: Restart upload-service Web App
+        run: az webapp restart --resource-group ${{secrets.RESOURCE_GROUP}} --name ${{secrets.UPLOAD_APP_NAME}}
+
+      # Deploy auth-service to Azure Web App
+      - name: Deploy auth-service to Azure Web App
+        run: |
+          az webapp config container set \
+            --resource-group ${{secrets.RESOURCE_GROUP}} \
+            --name ${{secrets.AUTH_APP_NAME}} \
+            --docker-custom-image-name ${{ secrets.DOCKER_USERNAME }}/transcodex:auth-service-latest \
+            --docker-registry-server-url https://docker.io
+
+      - name: Restart auth-service Web App
+        run: az webapp restart --resource-group ${{secrets.RESOURCE_GROUP}} --name ${{secrets.AUTH_APP_NAME}}
+
+      - name: Build and push traefik image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/transcodex:traefik-latest ./TranscodeX.Backend/traefik
+          docker push ${{ secrets.DOCKER_USERNAME }}/transcodex:traefik-latest
+
+      # Render traefik deploy trigger
+      - name: Trigger Render traefik deployment
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
