@@ -13,17 +13,11 @@ exports.processUpload = async (file, userId, queueName = process.env.UPLOAD_RABB
     const filename = `${videoId}${path.extname(file.originalname)}`;
 
     let storageKey;
-    try {
-      storageKey = await uploadToB2(file.path, filename);
-    } catch (b2Error) {
-      return res.status(500).json({ message: 'B2 upload error', error: b2Error.message });
-    }
-
-    try {
-      fs.unlinkSync(file.path);
-    } catch (fsError) {
-      
-    }
+    
+    storageKey = await uploadToB2(file.path, filename);
+    
+    fs.unlinkSync(file.path);
+    
 
     try {
       await Upload.create({
