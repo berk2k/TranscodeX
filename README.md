@@ -29,7 +29,7 @@ The **Traefik API Gateway** manages routing and middleware for all services and 
 ## ⚙️ Technology Stack
 
 - **Backend:** Node.js & Express.js  
-- **Messaging:** RabbitMQ (hosted on Render) for async communication  
+- **Messaging:** RabbitMQ for async communication  
 - **Storage:** Backblaze B2 cloud storage  
 - **Containerization:** Docker & Docker Compose  
 - **API Gateway:** Traefik (Render)
