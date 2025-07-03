@@ -28,7 +28,8 @@ The **Traefik API Gateway** manages routing and middleware for all services and 
 
 ## ⚙️ Technology Stack
 
-- **Backend:** Node.js & Express.js  
+- **Backend:** Node.js & Express.js
+- **Database:** Postgres  
 - **Messaging:** RabbitMQ for async communication  
 - **Storage:** Backblaze B2 cloud storage  
 - **Containerization:** Docker & Docker Compose  
