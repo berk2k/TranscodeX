@@ -169,7 +169,7 @@ services:
       POSTGRES_USER: ${AUTH_DB_USER}
       POSTGRES_PASSWORD: ${AUTH_DB_PASS}
     ports:
-      - "5435:5432" # İstersen dış erişim için aç, gerekmiyorsa kaldır
+      - "5435:5432" 
     volumes:
       - auth_pg_data:/var/lib/postgresql/data
 
